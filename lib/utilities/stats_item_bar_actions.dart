@@ -1,0 +1,1 @@
+enum StatsItemBarAction { details, remove }
