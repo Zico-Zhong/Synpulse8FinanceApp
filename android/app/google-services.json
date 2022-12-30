@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "594441767161",
+    "project_id": "flash-chat-20599",
+    "storage_bucket": "flash-chat-20599.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594441767161:android:ff7f9fc0b8f0accab73a28",
+        "android_client_info": {
+          "package_name": "com.example.zz.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc2ygaNqw5B7UzH631g_K013VdBY177Zw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594441767161:android:4db4bf132ded4a91b73a28",
+        "android_client_info": {
+          "package_name": "com.synpulse8.challenge.zz.financer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc2ygaNqw5B7UzH631g_K013VdBY177Zw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
