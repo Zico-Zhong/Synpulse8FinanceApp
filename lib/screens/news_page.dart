@@ -4,6 +4,7 @@ import 'package:financer/utilities/constants.dart';
 import '../components/buttons/corner_button.dart';
 import '../components/rounded_logo_image.dart';
 import '../utilities/news.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AllNewsPage extends StatefulWidget {
   final String instrumentName;
@@ -44,7 +45,8 @@ class _AllNewsPageState extends State<AllNewsPage> {
           title: 'Here is the news ${i + 1} about the instrument Financer',
           profileAvatarPath: 'images/financer_logo.png',
           publisherName: 'Financer Developer',
-          publishTime: DateTime.now().subtract(Duration(hours: i))));
+          publishTime: DateTime.now().subtract(Duration(hours: i)),
+          url: 'https://www.baidu.com'));
     }
     sortNewsList();
   }
@@ -125,11 +127,11 @@ class NewsList extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8.0),
             child: NewsItemBar1(
                 data: NewsItemBarData(
-                    logoPath: newsList[index].profileAvatarPath,
-                    title: newsList[index].title,
-                    publisher: newsList[index].publisherName,
-                    timeInterval:
-                        timeShowingFormatting(newsList[index].publishTime))),
+              logoPath: newsList[index].profileAvatarPath,
+              title: newsList[index].title,
+              publisher: newsList[index].publisherName,
+              timeInterval: timeShowingFormatting(newsList[index].publishTime),
+            )),
           );
         },
         separatorBuilder: (context, index) {
@@ -148,45 +150,56 @@ class NewsItemBar1 extends StatelessWidget {
 
   const NewsItemBar1({required this.data, super.key});
 
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse(data.url))) {
+      throw 'Could not launch ${data.url}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 376.0,
-      height: 66.0,
-      decoration: kItemCardDecoration.copyWith(
-          border: Border.all(color: const Color(0xFFD3D3D3))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: RoundedLogoImage(logoPath: data.logoPath),
-            ),
-            const SizedBox(
-              width: 8.0,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Flexible(
-                    child: Text(
-                      data.title,
-                      style: kItemTitleStyle.copyWith(fontSize: 14.0),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                  Text(
-                    '${data.publisher} · ${data.timeInterval}',
-                    style: kInfoItemOffsetStyle,
-                  )
-                ],
+    return GestureDetector(
+      onTap: () async {
+        _launchUrl();
+      },
+      child: Container(
+        width: 376.0,
+        height: 66.0,
+        decoration: kItemCardDecoration.copyWith(
+            border: Border.all(color: const Color(0xFFD3D3D3))),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: RoundedLogoImage(logoPath: data.logoPath),
               ),
-            )
-          ],
+              const SizedBox(
+                width: 8.0,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        data.title,
+                        style: kItemTitleStyle.copyWith(fontSize: 14.0),
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                    Text(
+                      '${data.publisher} · ${data.timeInterval}',
+                      style: kInfoItemOffsetStyle,
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -198,10 +211,12 @@ class NewsItemBarData {
   String title;
   String publisher;
   String timeInterval;
+  String url;
 
   NewsItemBarData(
       {this.logoPath = '',
       this.title = '',
       this.publisher = '',
-      this.timeInterval = ''});
+      this.timeInterval = '',
+      this.url = 'https://flutter.dev'});
 }

@@ -153,12 +153,14 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
         title: 'Here is the news 1 about the instrument Financer',
         profileAvatarPath: 'images/financer_logo.png',
         publisherName: 'Financer Developer',
-        publishTime: DateTime.now().subtract(const Duration(hours: 6))));
+        publishTime: DateTime.now().subtract(const Duration(hours: 6)),
+        url: 'https://flutter.dev'));
     newsList.add(News(
         title: 'Here is the news 2 about the instrument Financer',
         profileAvatarPath: 'images/financer_logo.png',
         publisherName: 'Financer Developer',
-        publishTime: DateTime.now().subtract(const Duration(hours: 3))));
+        publishTime: DateTime.now().subtract(const Duration(hours: 3)),
+        url: 'https://flutter.dev'));
     sortNewsList();
   }
 
@@ -417,12 +419,13 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                                 return Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: NewsItemBar(
-                                      logoPath:
-                                          newsList[index].profileAvatarPath,
-                                      title: newsList[index].title,
-                                      publisher: newsList[index].publisherName,
-                                      timeInterval: timeShowingFormatting(
-                                          newsList[index].publishTime)),
+                                    logoPath: newsList[index].profileAvatarPath,
+                                    title: newsList[index].title,
+                                    publisher: newsList[index].publisherName,
+                                    timeInterval: timeShowingFormatting(
+                                        newsList[index].publishTime),
+                                    url: newsList[index].url,
+                                  ),
                                 );
                               }),
                         )
