@@ -2,16 +2,19 @@ import 'package:financer/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import '../../screens/item_details_page.dart';
 import '../buttons/follow_rectangle_button.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class FollowItemCard extends StatefulWidget {
   final String logoPath;
   final String name;
   final String code;
   final bool followed;
+  final bool local;
   const FollowItemCard(
       {super.key,
       required this.name,
       required this.logoPath,
+      required this.local,
       required this.followed,
       required this.code});
 
@@ -23,11 +26,13 @@ class _FollowItemCardState extends State<FollowItemCard> {
   late String logoPath;
   late String name;
   late bool followed;
+  late bool local;
 
   @override
   void initState() {
     super.initState();
     logoPath = widget.logoPath;
+    local = widget.local;
     name = widget.name;
     followed = widget.followed;
   }
@@ -53,6 +58,7 @@ class _FollowItemCardState extends State<FollowItemCard> {
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
                 width: 60,
@@ -61,13 +67,18 @@ class _FollowItemCardState extends State<FollowItemCard> {
                   shape: BoxShape.circle,
                   border:
                       Border.all(color: const Color(0xFFF5F5F5), width: 1.0),
-                  image: DecorationImage(
-                      image: AssetImage(logoPath), fit: BoxFit.fill),
+                  image: local
+                      ? DecorationImage(
+                          image: AssetImage(logoPath), fit: BoxFit.fill)
+                      : DecorationImage(
+                          image: NetworkImage(logoPath), fit: BoxFit.fill),
                 ),
               ),
               const SizedBox(height: 12.0),
-              Text(
+              AutoSizeText(
                 name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20.0,

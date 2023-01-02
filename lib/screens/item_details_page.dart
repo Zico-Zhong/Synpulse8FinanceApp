@@ -236,9 +236,11 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            instrument.name,
-                            style: kTopTitleStyle,
+                          Expanded(
+                            child: Text(
+                              widget.name,
+                              style: kTopTitleStyle,
+                            ),
                           ),
                           RoundedLogoImage(logoPath: instrument.logoPath),
                         ],

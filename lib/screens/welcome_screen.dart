@@ -1,4 +1,6 @@
 import 'package:financer/screens/main_page.dart';
+import 'package:financer/services/algolia_application.dart';
+import 'package:financer/services/data_retriever.dart';
 import 'package:financer/utilities/constants.dart';
 import 'package:financer/utilities/instrument_overview.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import '../components/search_bar.dart';
 import '../components/buttons/rectangle_button.dart';
 import '../components/cards/follow_item_card.dart';
 import '../components/buttons/corner_button.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Welcome extends StatefulWidget {
   static String route = '/welcome';
@@ -20,13 +23,92 @@ class _WelcomeState extends State<Welcome> {
   List<Widget> instrumentCards = [];
   final searchBarController = TextEditingController();
 
+  void fetchAndSaveInstrumentData() async {
+    DataRetriever retriever = DataRetriever(
+        url:
+            'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=60min&apikey=PRBX043CES5E7HW0');
+    var algolia = AlgoliaApplication.algolia;
+
+    var receivedData = await retriever.getData();
+
+    var addData = <String, dynamic>{
+      'name': receivedData['Meta Data']['2. Symbol'],
+      'price': receivedData['Time Series (60min)']['2022-12-30 18:00:00']
+          ['4. close']
+    };
+
+    await algolia.instance.index('dev_FINANCER_INSTRUMENT').addObject(addData);
+  }
+
+  Future<List<Map<String, dynamic>>> fetchInstrumentData() async {
+    List<Map<String, dynamic>> dataList = [];
+    DataRetriever retriever = DataRetriever(
+        url:
+            'https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=PRBX043CES5E7HW0');
+    var receivedDataIBM = await retriever.getData();
+    var addDataIBM = <String, dynamic>{
+      'symbol': receivedDataIBM['Symbol'],
+      'name': receivedDataIBM['Name']
+    };
+    retriever.serUrl(
+        'https://www.alphavantage.co/query?function=OVERVIEW&symbol=AAPL&apikey=PRBX043CES5E7HW0');
+    var receivedDataAPPL = await retriever.getData();
+    var addDataAPPL = <String, dynamic>{
+      'symbol': receivedDataAPPL['Symbol'],
+      'name': receivedDataAPPL['Name']
+    };
+    retriever.serUrl(
+        'https://www.alphavantage.co/query?function=OVERVIEW&symbol=GOOG&apikey=PRBX043CES5E7HW0');
+    var receivedDataGOOG = await retriever.getData();
+    var addDataGOOG = <String, dynamic>{
+      'symbol': receivedDataGOOG['Symbol'],
+      'name': receivedDataGOOG['Name']
+    };
+    retriever.serUrl(
+        'https://www.alphavantage.co/query?function=OVERVIEW&symbol=MSFT&apikey=PRBX043CES5E7HW0');
+    var receivedDataMSFT = await retriever.getData();
+    var addDataMSFT = <String, dynamic>{
+      'symbol': receivedDataMSFT['Symbol'],
+      'name': receivedDataMSFT['Name']
+    };
+    retriever.serUrl(
+        'https://www.alphavantage.co/query?function=OVERVIEW&symbol=AMZN&apikey=PRBX043CES5E7HW0');
+    var receivedDataAMZN = await retriever.getData();
+    var addDataAMZN = <String, dynamic>{
+      'symbol': receivedDataAMZN['Symbol'],
+      'name': receivedDataAMZN['Name']
+    };
+    dataList.add(addDataIBM);
+    dataList.add(addDataAPPL);
+    dataList.add(addDataGOOG);
+    dataList.add(addDataMSFT);
+    dataList.add(addDataAMZN);
+
+    List<String> logoPaths = [
+      'https://th.bing.com/th/id/R.81291be958924bf66c64a1a16171302d?rik=enr1crFGlhP%2f5Q&riu=http%3a%2f%2f1000logos.net%2fwp-content%2fuploads%2f2017%2f02%2fColor-IBM-Logo.jpg&ehk=3lMuaJI%2bEiYjzvaK6prs4mryZgluY0pQG5WhtYQVWKU%3d&risl=&pid=ImgRaw&r=0',
+      'https://th.bing.com/th/id/R.a691dfa22635c11791f78e215d69bbc3?rik=Ms2XMlun2W9tTw&riu=http%3a%2f%2fincitrio.com%2fwp-content%2fuploads%2f2015%2f01%2fApple_gray_logo.png&ehk=7LassJNwds3BTEqitrfk8bUlGqmX01%2b5UMUCH1ixbBk%3d&risl=&pid=ImgRaw&r=0',
+      'https://th.bing.com/th/id/OIP.FtqqM5mWlVO54JPjFlS1GwHaFj?pid=ImgDet&rs=1',
+      'https://th.bing.com/th/id/OIP.PWoq1WvDQDxc_MPv4Jt0GwHaHa?pid=ImgDet&rs=1',
+      'https://tse3-mm.cn.bing.net/th/id/OIP-C.Kq00N0XXUmDFNiXoeGG4FAHaE8?w=267&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7'
+    ];
+
+    setState(() {
+      for (int i = 0; i < dataList.length; i++) {
+        instruments = [
+          ...instruments,
+          Instrument(logoPaths[i], dataList[i]['name'], dataList[i]['symbol'],
+              followed: false),
+        ];
+      }
+    });
+
+    return dataList;
+  }
+
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < 5; ++i) {
-      instruments.add(Instrument('images/financer_logo.png', 'Financer', 'FNR',
-          followed: false));
-    }
+    fetchInstrumentData();
   }
 
   @override
@@ -37,6 +119,7 @@ class _WelcomeState extends State<Welcome> {
 
   List<Widget> getInstrumentsCards() {
     int numOfInstruments = instruments.length;
+    instrumentCards = [];
     if (numOfInstruments % 2 == 0) {
       for (int i = 0; i < numOfInstruments; i += 2) {
         instrumentCards.add(Padding(
@@ -47,12 +130,14 @@ class _WelcomeState extends State<Welcome> {
               FollowItemCard(
                 name: instruments[i].name,
                 code: instruments[i].code,
+                local: false,
                 logoPath: instruments[i].logoPath,
                 followed: instruments[i].followed,
               ),
               FollowItemCard(
                 name: instruments[i + 1].name,
                 code: instruments[i + 1].code,
+                local: false,
                 logoPath: instruments[i + 1].logoPath,
                 followed: instruments[i + 1].followed,
               ),
@@ -70,12 +155,14 @@ class _WelcomeState extends State<Welcome> {
               FollowItemCard(
                 name: instruments[i].name,
                 code: instruments[i].code,
+                local: false,
                 logoPath: instruments[i].logoPath,
                 followed: instruments[i].followed,
               ),
               FollowItemCard(
                 name: instruments[i + 1].name,
                 code: instruments[i + 1].code,
+                local: false,
                 logoPath: instruments[i + 1].logoPath,
                 followed: instruments[i + 1].followed,
               ),
@@ -89,16 +176,17 @@ class _WelcomeState extends State<Welcome> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FollowItemCard(
-              name: instruments[numOfInstruments - 1].name,
-              code: instruments[numOfInstruments - 1].code,
-              logoPath: instruments[numOfInstruments - 1].logoPath,
-              followed: instruments[numOfInstruments - 1].followed,
+              name: instruments[instruments.length - 1].name,
+              code: instruments[instruments.length - 1].code,
+              local: false,
+              logoPath: instruments[instruments.length - 1].logoPath,
+              followed: instruments[instruments.length - 1].followed,
             ),
             Container(
               width: 175,
               height: 175,
               color: const Color(0xFFEBF3F8),
-            ),
+            )
           ],
         ),
       ));
@@ -178,7 +266,14 @@ class _WelcomeState extends State<Welcome> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
-                          children: getInstrumentsCards(),
+                          children: instruments.isNotEmpty
+                              ? getInstrumentsCards()
+                              : [
+                                  const SpinKitDualRing(
+                                    color: Colors.lightGreenAccent,
+                                    size: 50.0,
+                                  )
+                                ],
                         ),
                       ),
                     ),
