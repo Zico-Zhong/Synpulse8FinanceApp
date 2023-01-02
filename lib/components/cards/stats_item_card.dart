@@ -33,7 +33,10 @@ class StatsItemCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: RoundedLogoImage(logoPath: logoPath),
+              child: RoundedLogoImage(
+                logoPath: logoPath,
+                network: false,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),

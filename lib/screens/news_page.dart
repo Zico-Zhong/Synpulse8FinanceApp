@@ -173,7 +173,10 @@ class NewsItemBar1 extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(6.0),
-                child: RoundedLogoImage(logoPath: data.logoPath),
+                child: RoundedLogoImage(
+                  logoPath: data.logoPath,
+                  network: false,
+                ),
               ),
               const SizedBox(
                 width: 8.0,

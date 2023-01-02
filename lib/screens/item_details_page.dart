@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 import '../components/buttons/follow_rectangle_button.dart';
 import '../components/news_item_bar.dart';
 import '../components/slide_selector.dart';
+import '../services/data_retriever.dart';
 import '../utilities/news.dart';
 import '../utilities/path_painter.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ItemDetailsPage extends StatefulWidget {
   final String code;
@@ -103,7 +105,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
     } else if (duration.inHours < 24) {
       ret = '${duration.inHours}h ago';
     } else if (duration.inDays < 30) {
-      ret = '${duration.inSeconds}d ago';
+      ret = '${duration.inDays}d ago';
     }
     return ret;
   }
@@ -125,6 +127,31 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
       ));
     }
     return labels;
+  }
+
+  void fetchNews() async {
+    DataRetriever retriever = DataRetriever(
+        url:
+            'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${widget.code}&apikey=PRBX043CES5E7HW0');
+    var receivedData = await retriever.getData();
+
+    if (int.parse(receivedData['items']) > 2) {
+      for (int i = 0; i < 2; i++) {
+        setState(() {
+          newsList = [
+            ...newsList,
+            News(
+                title: receivedData['feed'][i]['title'],
+                profileAvatarPath: receivedData['feed'][i]['banner_image'],
+                publisherName: receivedData['feed'][i]['source'],
+                publishTime:
+                    DateTime.parse(receivedData['feed'][i]['time_published']),
+                url: receivedData['feed'][i]['url'])
+          ];
+        });
+      }
+    }
+    sortNewsList();
   }
 
   @override
@@ -149,19 +176,8 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
     currDataMaxValue = drawingDataList
         .reduce((value, element) => value > element ? value : element);
     valuesDataAll = instrument.valuesData;
-    newsList.add(News(
-        title: 'Here is the news 1 about the instrument Financer',
-        profileAvatarPath: 'images/financer_logo.png',
-        publisherName: 'Financer Developer',
-        publishTime: DateTime.now().subtract(const Duration(hours: 6)),
-        url: 'https://flutter.dev'));
-    newsList.add(News(
-        title: 'Here is the news 2 about the instrument Financer',
-        profileAvatarPath: 'images/financer_logo.png',
-        publisherName: 'Financer Developer',
-        publishTime: DateTime.now().subtract(const Duration(hours: 3)),
-        url: 'https://flutter.dev'));
-    sortNewsList();
+
+    fetchNews();
   }
 
   @override
@@ -242,7 +258,10 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                               style: kTopTitleStyle,
                             ),
                           ),
-                          RoundedLogoImage(logoPath: instrument.logoPath),
+                          RoundedLogoImage(
+                            logoPath: instrument.logoPath,
+                            network: false,
+                          ),
                         ],
                       ),
                     ),
@@ -413,24 +432,31 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                           ],
                         ),
                         SizedBox(
-                          height: 102.0,
-                          child: ListView.builder(
-                              itemCount: newsList.length,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: NewsItemBar(
-                                    logoPath: newsList[index].profileAvatarPath,
-                                    title: newsList[index].title,
-                                    publisher: newsList[index].publisherName,
-                                    timeInterval: timeShowingFormatting(
-                                        newsList[index].publishTime),
-                                    url: newsList[index].url,
-                                  ),
-                                );
-                              }),
-                        )
+                            height: 102.0,
+                            child: newsList.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount: newsList.length,
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: NewsItemBar(
+                                          logoPath:
+                                              newsList[index].profileAvatarPath,
+                                          title: newsList[index].title,
+                                          publisher:
+                                              newsList[index].publisherName,
+                                          timeInterval: timeShowingFormatting(
+                                              newsList[index].publishTime),
+                                          url: newsList[index].url,
+                                        ),
+                                      );
+                                    })
+                                : const SpinKitDualRing(
+                                    color: Colors.lightGreenAccent,
+                                    size: 50.0,
+                                  ))
                       ],
                     ),
                   ),

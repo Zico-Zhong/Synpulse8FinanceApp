@@ -4,9 +4,11 @@ class RoundedLogoImage extends StatelessWidget {
   const RoundedLogoImage({
     Key? key,
     required this.logoPath,
+    required this.network,
   }) : super(key: key);
 
   final String logoPath;
+  final bool network;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,9 @@ class RoundedLogoImage extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: const Color(0xFFF5F5F5), width: 1.0),
-        image: DecorationImage(image: AssetImage(logoPath), fit: BoxFit.fill),
+        image: network
+            ? DecorationImage(image: NetworkImage(logoPath), fit: BoxFit.fill)
+            : DecorationImage(image: AssetImage(logoPath), fit: BoxFit.fill),
       ),
     );
   }

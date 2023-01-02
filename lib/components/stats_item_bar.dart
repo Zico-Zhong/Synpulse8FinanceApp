@@ -146,7 +146,10 @@ class _StatsItemBarState extends State<StatsItemBar> {
                       followStatus = followStatus ? false : true;
                     });
                   }),
-              RoundedLogoImage(logoPath: logoPath),
+              RoundedLogoImage(
+                logoPath: logoPath,
+                network: false,
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
