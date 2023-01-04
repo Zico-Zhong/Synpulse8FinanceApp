@@ -135,7 +135,8 @@ class _PortfolioState extends State<Portfolio> {
                           }
                         });
                       },
-                      hintTxt: 'Search for any instrument with its name',
+                      hintTxt:
+                          'Search for any instrument in your watchlist with its name',
                     ),
                   ),
                 ),

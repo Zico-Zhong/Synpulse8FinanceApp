@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:algolia/algolia.dart';
 import 'package:financer/screens/main_page.dart';
 import 'package:financer/services/algolia_application.dart';
 import 'package:financer/services/data_retriever.dart';
@@ -21,23 +24,49 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   List<Instrument> instruments = [];
   List<Widget> instrumentCards = [];
+  Map<String, String> instrumentsLogoPath = {
+    'IBM':
+        'https://th.bing.com/th/id/R.81291be958924bf66c64a1a16171302d?rik=enr1crFGlhP%2f5Q&riu=http%3a%2f%2f1000logos.net%2fwp-content%2fuploads%2f2017%2f02%2fColor-IBM-Logo.jpg&ehk=3lMuaJI%2bEiYjzvaK6prs4mryZgluY0pQG5WhtYQVWKU%3d&risl=&pid=ImgRaw&r=0',
+    'AAPL':
+        'https://th.bing.com/th/id/R.a691dfa22635c11791f78e215d69bbc3?rik=Ms2XMlun2W9tTw&riu=http%3a%2f%2fincitrio.com%2fwp-content%2fuploads%2f2015%2f01%2fApple_gray_logo.png&ehk=7LassJNwds3BTEqitrfk8bUlGqmX01%2b5UMUCH1ixbBk%3d&risl=&pid=ImgRaw&r=0',
+    'GOOG':
+        'https://th.bing.com/th/id/OIP.FtqqM5mWlVO54JPjFlS1GwHaFj?pid=ImgDet&rs=1',
+    'MSFT':
+        'https://th.bing.com/th/id/OIP.PWoq1WvDQDxc_MPv4Jt0GwHaHa?pid=ImgDet&rs=1',
+    'AMZN':
+        'https://tse3-mm.cn.bing.net/th/id/OIP-C.Kq00N0XXUmDFNiXoeGG4FAHaE8?w=267&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7'
+  };
   final searchBarController = TextEditingController();
 
   void fetchAndSaveInstrumentData() async {
-    DataRetriever retriever = DataRetriever(
-        url:
-            'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=60min&apikey=PRBX043CES5E7HW0');
+    DataRetriever retriever = DataRetriever(url: '');
     var algolia = AlgoliaApplication.algolia;
 
-    var receivedData = await retriever.getData();
+    var batch = algolia.instance.index('dev_FINANCER_INSTRUMENT').batch();
+    batch.clearIndex();
+    List<String> stockCompanies = ['IBM', 'AAPL', 'GOOG', 'MSFT', 'AMZN'];
 
-    var addData = <String, dynamic>{
-      'name': receivedData['Meta Data']['2. Symbol'],
-      'price': receivedData['Time Series (60min)']['2022-12-30 18:00:00']
-          ['4. close']
-    };
+    for (String stock in stockCompanies) {
+      retriever.serUrl(
+          'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=$stock&interval=60min&apikey=PRBX043CES5E7HW0');
+      var receivedPriceData = await retriever.getData();
+      retriever.serUrl(
+          'https://www.alphavantage.co/query?function=OVERVIEW&symbol=$stock&apikey=PRBX043CES5E7HW0');
+      var receivedOverviewData = await retriever.getData();
 
-    await algolia.instance.index('dev_FINANCER_INSTRUMENT').addObject(addData);
+      var addData = <String, dynamic>{
+        'code': receivedPriceData['Meta Data']['2. Symbol'],
+        'name': receivedOverviewData['Name'],
+        'price': receivedPriceData['Time Series (60min)']['2023-01-03 20:00:00']
+            ['4. close']
+      };
+      batch.addObject(addData);
+      print('waiting for 30 seconds...');
+      sleep(const Duration(seconds: 30));
+    }
+
+    await batch.commit();
+    print('done');
   }
 
   Future<List<Map<String, dynamic>>> fetchInstrumentData() async {
@@ -108,7 +137,32 @@ class _WelcomeState extends State<Welcome> {
   @override
   void initState() {
     super.initState();
+    // fetchAndSaveInstrumentData();
     fetchInstrumentData();
+    searchBarController.addListener(() async {
+      var algolia = AlgoliaApplication.algolia;
+      var query = algolia.instance
+          .index('dev_FINANCER_INSTRUMENT')
+          .query(searchBarController.text);
+      setState(() {
+        instruments = [];
+      });
+      var snap = await query.getObjects();
+      List<Map<String, dynamic>> searchResults = [];
+      for (int i = 0; i < snap.hits.length; i++) {
+        var searchResult = snap.hits.elementAt(i).data;
+        searchResults.add(searchResult);
+      }
+      List<Instrument> toShowInstruments = [];
+      for (Map<String, dynamic> result in searchResults) {
+        toShowInstruments.add(Instrument(instrumentsLogoPath[result['code']]!,
+            result['name'], result['code'],
+            price: double.parse(result['price']), followed: false));
+      }
+      setState(() {
+        instruments = toShowInstruments;
+      });
+    });
   }
 
   @override
