@@ -13,7 +13,18 @@ class RegisterEmail extends StatefulWidget {
 }
 
 class _RegisterEmailState extends State<RegisterEmail> {
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+  String currErr = 'EMPTY';
+  bool errShows = false;
+  Map<String, String> errMsg = {
+    'EMPTY': 'Please fill all the blanks in the form!',
+    'PASSWORDNOTMATCH':
+        'Your password and confirming password is not matched, please check and enter again!'
+  };
   final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,21 +66,57 @@ class _RegisterEmailState extends State<RegisterEmail> {
                         color: const Color(0xFFFF304B),
                         btnTxt: 'Register',
                         onTapFunc: () {
-                          try {
-                            final newUser =
-                                _auth.createUserWithEmailAndPassword(
-                                    email: 'zzh15989022638@gmail.com',
-                                    password: '123456');
-                            if (newUser != null) {
-                            } else {}
-                          } catch (e) {
-                            print(e);
+                          if (password != confirmPassword) {
+                            currErr = 'PASSWORDNOTMATCH';
+                            setState(() {
+                              errShows = true;
+                            });
+                          } else if (email.isEmpty ||
+                              password.isEmpty ||
+                              confirmPassword.isEmpty) {
+                            currErr = 'EMPTY';
+                            setState(() {
+                              errShows = true;
+                            });
+                          } else {
+                            setState(() {
+                              errShows = false;
+                            });
+                            try {
+                              final newUser =
+                                  _auth.createUserWithEmailAndPassword(
+                                      email: 'zzh15989022638@gmail.com',
+                                      password: '123456');
+                              if (newUser != null) {
+                              } else {}
+                            } catch (e) {
+                              print(e);
+                            }
+                            Navigator.pushNamed(context, Welcome.route);
                           }
-                          Navigator.pushNamed(context, Welcome.route);
                         },
                       ),
                       const SizedBox(
-                        height: 130.0,
+                        height: 42.0,
+                      ),
+                      Visibility(
+                        visible: errShows,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 30.0, right: 20.0),
+                          child: Text(
+                            errMsg[currErr]!,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 60.0,
                       ),
                     ],
                   ),
@@ -106,7 +153,9 @@ class _RegisterEmailState extends State<RegisterEmail> {
                         keyboardType: TextInputType.emailAddress,
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.black),
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          email = value;
+                        },
                         decoration: kInputBoxDecoration.copyWith(
                           labelText: 'Email',
                           hintText: 'Enter your Email here...',
@@ -131,7 +180,9 @@ class _RegisterEmailState extends State<RegisterEmail> {
                         obscureText: true,
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.black),
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          password = value;
+                        },
                         decoration: kInputBoxDecoration.copyWith(
                           labelText: 'Password',
                           hintText: 'Enter your Password here...',
@@ -156,7 +207,9 @@ class _RegisterEmailState extends State<RegisterEmail> {
                         obscureText: true,
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.black),
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          confirmPassword = value;
+                        },
                         decoration: kInputBoxDecoration.copyWith(
                           labelText: 'Confirm Password',
                           hintText: 'Enter your Password again here...',

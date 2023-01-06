@@ -52,9 +52,10 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
 
   Future<void> share() async {
     await FlutterShare.share(
-        title: 'Instrument Sharing',
-        text: "${instrument.name} : ${instrument.code} : ",
-        linkUrl: 'com.synpulse8.zz.front_end_challenge',
+        title: 'Instrument Info Sharing',
+        text:
+            "${instrument.name} : ${instrument.code} : current price: \$${instrument.price}",
+        // linkUrl: 'com.synpulse8.zz.front_end_challenge',
         chooserTitle: 'Choose an external tool to share the info.');
   }
 
