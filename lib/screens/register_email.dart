@@ -58,7 +58,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
                           try {
                             final newUser =
                                 _auth.createUserWithEmailAndPassword(
-                                    email: '123@qq.com', password: '123456');
+                                    email: 'zzh15989022638@gmail.com',
+                                    password: '123456');
                             if (newUser != null) {
                             } else {}
                           } catch (e) {

@@ -1,62 +1,41 @@
 {
   "project_info": {
-    "project_number": "594441767161",
-    "project_id": "flash-chat-20599",
-    "storage_bucket": "flash-chat-20599.appspot.com"
+    "project_number": "798892747126",
+    "project_id": "financer-6105e",
+    "storage_bucket": "financer-6105e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594441767161:android:ff7f9fc0b8f0accab73a28",
-        "android_client_info": {
-          "package_name": "com.example.zz.flash_chat"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBc2ygaNqw5B7UzH631g_K013VdBY177Zw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:594441767161:android:4db4bf132ded4a91b73a28",
+        "mobilesdk_app_id": "1:798892747126:android:d086185df6b2a9a33cf257",
         "android_client_info": {
           "package_name": "com.synpulse8.challenge.zz.financer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
+          "client_id": "798892747126-gsdu7du5mtqfd9lipps35g04qfq0ck9b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.synpulse8.challenge.zz.financer",
+            "certificate_hash": "0bd5904f043b3bcb1ebb191595c4deae479f41f6"
+          }
+        },
+        {
+          "client_id": "798892747126-1n8n2e2eq760aeeiqloite3rjasp8qao.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBc2ygaNqw5B7UzH631g_K013VdBY177Zw"
+          "current_key": "AIzaSyDbju4rSui0oDk73o42UftRp31bB_EmFm8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "594441767161-7h2sru45fq3o021eq62ccc26amnp8kog.apps.googleusercontent.com",
+              "client_id": "798892747126-1n8n2e2eq760aeeiqloite3rjasp8qao.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
