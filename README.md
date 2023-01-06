@@ -22,16 +22,16 @@ The user will be able to undertake the following actions in the mobile app:
 ## Expected Improvements or something not accomplished
 Due to the limitation of time, as well as various personal reasons including health condition, network firewall of my current location etc, some of the functionalities are not accomplished yet, check the list containing all the items don't work as expectation as follow:
 
-  - Firebase Application
+  - Firebase Application<br/>
   As I suppose, the problem should only happen within Chinese Mainland, due to the interception from the network firewall governed by the China Government. Have tried to follow the instructions of Firebase console step by step to configure the application, keeping the VPN on, tried to run the service on emulator as well as real mobile device which are with Google Play service enabled, but still got a Network Error (Connection Time Out). As a result of that, 
     - Register & Login only done in User interface
     - Follow only done in user interface
     - Portfolio management only done in user interface
 
-  - Amount of accessible financial instruments within the application
+  - Amount of accessible financial instruments within the application<br/>
   Only 5 financial instruments are available in this application for demostration, there is not an API which enables the users to fetch a list with a bunch of financial instruments.
 
-  - Historical price data showing
+  - Historical price data showing<br/>
   The graph shows the historical data is completely in hard-code, which means that it is not the true price statistics of such financial instrument, instead, only the hand-written graph placed there. The reason why I implement this feature like that is hard to say, firstly, the API documentation is hard to understand since it's a little bit much professional for people who are not familar with finance, furthermore, the data should be fetched and saved to the database, then retrieve them when needed, however, Firebase is not working now, but at very least, the user interface is done with a hand-written graph in the corresponding page.
   
 ## Instruction to run the application
