@@ -10,13 +10,15 @@ class FollowItemCard extends StatefulWidget {
   final String code;
   final bool followed;
   final bool local;
+  final double price; // should not be fetched here but just for demo now
   const FollowItemCard(
       {super.key,
       required this.name,
       required this.logoPath,
       required this.local,
       required this.followed,
-      required this.code});
+      required this.code,
+      this.price = 0.0});
 
   @override
   State<FollowItemCard> createState() => _FollowItemCardState();
@@ -47,6 +49,7 @@ class _FollowItemCardState extends State<FollowItemCard> {
               builder: (context) => ItemDetailsPage(
                 code: widget.code,
                 name: name,
+                price: widget.price,
               ),
             ));
       },

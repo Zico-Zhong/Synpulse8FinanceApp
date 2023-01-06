@@ -187,6 +187,7 @@ class _WelcomeState extends State<Welcome> {
                 local: false,
                 logoPath: instruments[i].logoPath,
                 followed: instruments[i].followed,
+                price: instruments[i].price,
               ),
               FollowItemCard(
                 name: instruments[i + 1].name,
@@ -194,6 +195,7 @@ class _WelcomeState extends State<Welcome> {
                 local: false,
                 logoPath: instruments[i + 1].logoPath,
                 followed: instruments[i + 1].followed,
+                price: instruments[i + 1].price,
               ),
             ],
           ),
@@ -212,6 +214,7 @@ class _WelcomeState extends State<Welcome> {
                 local: false,
                 logoPath: instruments[i].logoPath,
                 followed: instruments[i].followed,
+                price: instruments[i].price,
               ),
               FollowItemCard(
                 name: instruments[i + 1].name,
@@ -219,6 +222,7 @@ class _WelcomeState extends State<Welcome> {
                 local: false,
                 logoPath: instruments[i + 1].logoPath,
                 followed: instruments[i + 1].followed,
+                price: instruments[i + 1].price,
               ),
             ],
           ),
@@ -235,6 +239,7 @@ class _WelcomeState extends State<Welcome> {
               local: false,
               logoPath: instruments[instruments.length - 1].logoPath,
               followed: instruments[instruments.length - 1].followed,
+              price: instruments[instruments.length - 1].price,
             ),
             Container(
               width: 175,

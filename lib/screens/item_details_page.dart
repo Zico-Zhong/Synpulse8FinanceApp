@@ -19,11 +19,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class ItemDetailsPage extends StatefulWidget {
   final String code;
   final String name;
+  final double price; // should not be fetched here but just for demo now
 
   const ItemDetailsPage({
     super.key,
     required this.code,
     required this.name,
+    this.price = 0.0,
   });
 
   @override
@@ -46,6 +48,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
   final double curveWidth = 320.0;
   final double curveHeight = 160.0;
   late bool followed;
+  late double price;
 
   Future<void> share() async {
     await FlutterShare.share(
@@ -176,6 +179,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
     currDataMaxValue = drawingDataList
         .reduce((value, element) => value > element ? value : element);
     valuesDataAll = instrument.valuesData;
+    price = widget.price;
 
     fetchNews();
   }
@@ -270,7 +274,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
                       child: Row(
                         children: [
                           Text(
-                            '\$${instrument.price}',
+                            '\$$price',
                             style: kInfoItemNumStyle.copyWith(fontSize: 22.0),
                           ),
                           Padding(
